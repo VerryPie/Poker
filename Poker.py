@@ -45,8 +45,7 @@ class Card():
     def getFigureName(self):
         if self.figure in range(11, 15):
             return Figure[self.figure]
-        else:
-            return self.figure
+        return self.figure
 
     def geColourName(self):
         return Colour[self.colour]
