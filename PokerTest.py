@@ -2,6 +2,21 @@ import unittest
 import Poker
 from unittest.mock import patch
 
+class testTable(unittest.TestCase):
+    def test_sits_full_error(self):
+        t = Poker.Table()
+        p1 = Poker.Player("A")
+        p2 = Poker.Player("B")
+        p3 = Poker.Player("C")
+        p4 = Poker.Player("D")
+        p5 = Poker.Player("ERROR")
+        t.take_sit(p1)
+        t.take_sit(p2)
+        t.take_sit(p3)
+        t.take_sit(p4)
+        with self.assertRaises(Exception): t.take_sit(p5)
+
+
 class testDeck(unittest.TestCase):
     def test_deck_size(self):
         self.assertEqual(len(Poker.Deck().cardList),52)
