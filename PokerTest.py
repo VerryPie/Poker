@@ -1,6 +1,22 @@
 import unittest
 import Poker
 from unittest.mock import patch
+from unittest.mock import Mock
+
+class testTable(unittest.TestCase):
+    def test_sits_full_error(self):
+        t = Poker.Table()
+        p1 = Poker.Player("A")
+        p2 = Poker.Player("B")
+        p3 = Poker.Player("C")
+        p4 = Poker.Player("D")
+        p5 = Poker.Player("ERROR")
+        t.take_sit(p1)
+        t.take_sit(p2)
+        t.take_sit(p3)
+        t.take_sit(p4)
+        with self.assertRaises(Exception): t.take_sit(p5)
+
 
 class testDeck(unittest.TestCase):
     def test_deck_size(self):
@@ -141,7 +157,7 @@ class testResultCounting(unittest.TestCase):
         pointCounter = Poker.pointCounter()
         self.assertFalse(pointCounter.findTwoPair(cardList))
 
-    @patch("Poker.Hand")
+
     def test_generateCombinationFromTableLength(self):
         card1 = Poker.Card(figure=2, colour=0)
         card2 = Poker.Card(figure=3, colour=1)
@@ -150,10 +166,11 @@ class testResultCounting(unittest.TestCase):
         card5 = Poker.Card(figure=6, colour=1)
         card6 = Poker.Card(figure=7, colour=2)
         card7 = Poker.Card(figure=12, colour=1)
-        cardList1 = [card1, card2]
-        cardList2 = [card3, card4, card5, card6, card7]
+        mock_hand = Mock()
+        mock_hand.cards = [card1, card2]
+        tableCards = [card3, card4, card5, card6, card7]
         pointCounter = Poker.pointCounter()
-        self.assertEqual(10,len(pointCounter.generateCombinationFromTable(cardList1, cardList2)))
+        self.assertEqual(10,len(pointCounter.generateCombinationFromTable(hand=mock_hand, tableCards=tableCards)))
 
 
     def test_PokerCombination(self):
@@ -162,10 +179,11 @@ class testResultCounting(unittest.TestCase):
         card3 = Poker.Card(figure=8, colour=0)
         card4 = Poker.Card(figure=6, colour=0)
         card5 = Poker.Card(figure=7, colour=0)
-        cardList1 = [card1, card2]
-        cardList2 = [card3, card4, card5]
+        mock_hand = Mock()
+        mock_hand.cards = [card1, card2]
+        tableCard = [card3, card4, card5]
         pointCounter = Poker.pointCounter()
-        best ,bestResultList = pointCounter.countBestResult(cardList1, cardList2)
+        best ,bestResultList = pointCounter.countBestResult(hand=mock_hand, tableCards=tableCard)
         self.assertEqual(best, Poker.GetResultName('Poker'))
 
     def test_FourOfKindCombination(self):
@@ -174,10 +192,11 @@ class testResultCounting(unittest.TestCase):
         card3 = Poker.Card(figure=7, colour=2)
         card4 = Poker.Card(figure=6, colour=3)
         card5 = Poker.Card(figure=7, colour=3)
-        cardList1 = [card1, card2]
-        cardList2 = [card3, card4, card5]
+        mock_hand = Mock()
+        mock_hand.cards = [card1, card2]
+        tableCard = [card3, card4, card5]
         pointCounter = Poker.pointCounter()
-        best ,bestResultList = pointCounter.countBestResult(cardList1, cardList2)
+        best ,bestResultList = pointCounter.countBestResult(hand=mock_hand, tableCards=tableCard)
         self.assertEqual(best, Poker.GetResultName('Four of Kind'))
 
     def test_FullHouseCombination(self):
@@ -186,10 +205,11 @@ class testResultCounting(unittest.TestCase):
         card3 = Poker.Card(figure=12, colour=2)
         card4 = Poker.Card(figure=7, colour=1)
         card5 = Poker.Card(figure=7, colour=3)
-        cardList1 = [card1, card2]
-        cardList2 = [card3, card4, card5]
+        mock_hand = Mock()
+        mock_hand.cards = [card1, card2]
+        tableCard = [card3, card4, card5]
         pointCounter = Poker.pointCounter()
-        best ,bestResultList = pointCounter.countBestResult(cardList1, cardList2)
+        best ,bestResultList = pointCounter.countBestResult(hand=mock_hand, tableCards=tableCard)
         self.assertEqual(best, Poker.GetResultName('Full house'))
 
     def test_FlushCombination(self):
@@ -198,10 +218,11 @@ class testResultCounting(unittest.TestCase):
         card3 = Poker.Card(figure=12, colour=1)
         card4 = Poker.Card(figure=5, colour=1)
         card5 = Poker.Card(figure=13, colour=1)
-        cardList1 = [card1, card2]
-        cardList2 = [card3, card4, card5]
+        mock_hand = Mock()
+        mock_hand.cards = [card1, card2]
+        tableCard = [card3, card4, card5]
         pointCounter = Poker.pointCounter()
-        best ,bestResultList = pointCounter.countBestResult(cardList1, cardList2)
+        best ,bestResultList = pointCounter.countBestResult(hand=mock_hand, tableCards=tableCard)
         self.assertEqual(best, Poker.GetResultName('Flush'))
 
     def test_StraightCombination(self):
@@ -210,10 +231,11 @@ class testResultCounting(unittest.TestCase):
         card3 = Poker.Card(figure=12, colour=3)
         card4 = Poker.Card(figure=9, colour=2)
         card5 = Poker.Card(figure=13, colour=1)
-        cardList1 = [card1, card2]
-        cardList2 = [card3, card4, card5]
+        mock_hand = Mock()
+        mock_hand.cards = [card1, card2]
+        tableCard = [card3, card4, card5]
         pointCounter = Poker.pointCounter()
-        best ,bestResultList = pointCounter.countBestResult(cardList1, cardList2)
+        best ,bestResultList = pointCounter.countBestResult(hand=mock_hand, tableCards=tableCard)
         self.assertEqual(best, Poker.GetResultName('Straight'))
 
     def test_ThreeOfKindCombination(self):
@@ -222,11 +244,11 @@ class testResultCounting(unittest.TestCase):
         card3 = Poker.Card(figure=12, colour=3)
         card4 = Poker.Card(figure=9, colour=2)
         card5 = Poker.Card(figure=13, colour=1)
-        cardList1 = [card1, card2]
-        cardList2 = [card3, card4, card5]
-
+        mock_hand = Mock()
+        mock_hand.cards = [card1, card2]
+        tableCard = [card3, card4, card5]
         pointCounter = Poker.pointCounter()
-        best ,bestResultList = pointCounter.countBestResult(cardList1, cardList2)
+        best ,bestResultList = pointCounter.countBestResult(hand=mock_hand, tableCards=tableCard)
         self.assertEqual(best, Poker.GetResultName('Three of kind'))
 
     def test_TwoPairCombination(self):
@@ -235,10 +257,11 @@ class testResultCounting(unittest.TestCase):
         card3 = Poker.Card(figure=13, colour=3)
         card4 = Poker.Card(figure=9, colour=2)
         card5 = Poker.Card(figure=13, colour=1)
-        cardList1 = [card1, card2]
-        cardList2 = [card3, card4, card5]
+        mock_hand = Mock()
+        mock_hand.cards = [card1, card2]
+        tableCard = [card3, card4, card5]
         pointCounter = Poker.pointCounter()
-        best ,bestResultList = pointCounter.countBestResult(cardList1, cardList2)
+        best ,bestResultList = pointCounter.countBestResult(hand=mock_hand, tableCards=tableCard)
         self.assertEqual(best, Poker.GetResultName('Two pair'))
 
     def test_OnePairCombination(self):
@@ -247,10 +270,11 @@ class testResultCounting(unittest.TestCase):
         card3 = Poker.Card(figure=13, colour=3)
         card4 = Poker.Card(figure=9, colour=2)
         card5 = Poker.Card(figure=13, colour=1)
-        cardList1 = [card1, card2]
-        cardList2 = [card3, card4, card5]
+        mock_hand = Mock()
+        mock_hand.cards = [card1, card2]
+        tableCard = [card3, card4, card5]
         pointCounter = Poker.pointCounter()
-        best ,bestResultList = pointCounter.countBestResult(cardList1, cardList2)
+        best ,bestResultList = pointCounter.countBestResult(hand=mock_hand, tableCards=tableCard)
         self.assertEqual(best, Poker.GetResultName('One pair'))
 
     def test_HighCardCombination(self):
@@ -259,10 +283,11 @@ class testResultCounting(unittest.TestCase):
         card3 = Poker.Card(figure=11, colour=3)
         card4 = Poker.Card(figure=9, colour=2)
         card5 = Poker.Card(figure=13, colour=1)
-        cardList1 = [card1, card2]
-        cardList2 = [card3, card4, card5]
+        mock_hand = Mock()
+        mock_hand.cards = [card1, card2]
+        tableCard = [card3, card4, card5]
         pointCounter = Poker.pointCounter()
-        best ,bestResultList = pointCounter.countBestResult(cardList1, cardList2)
+        best ,bestResultList = pointCounter.countBestResult(hand=mock_hand, tableCards=tableCard)
         self.assertEqual(best, Poker.GetResultName('High card'))
 
 if __name__ == '__main__':

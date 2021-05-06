@@ -29,13 +29,11 @@ Result = {
 
 }
 
-
 def GetResultName(val):
     for key, value in Result.items():
         if val == value:
             return key
-    return "key doesn't exist"
-
+    raise Exception("key doesn't exist")
 
 class Card():
     def __init__(self, colour, figure):
@@ -104,18 +102,12 @@ class Hand():
         return hand_cards
 
 
-##fabyrka gracz z ai i zwykly
-# class Player():
-# size = 5
-
-# class Game(num_of_ai_players):
-#   def __init__(self):
-#      self.deck = Deck()
 
 class Player:
 
-    def __init__(self):
+    def __init__(self, nick):
         self.avaiable_amount = 1000
+        self.name = nick
 
     def turn(self, play, game):
         if play == 1:
@@ -144,7 +136,6 @@ class Player:
 
 
 class Round:
-
     def __init__(self, players):
         self.players = players
         self.tableCards = []
@@ -361,6 +352,28 @@ class pointCounter:
         return best, bestCombination
 
 
+class Table():
+    def __init__(self):
+        self.sits = []
+
+    def take_sit(self, player):
+        if len(self.sits) == 4:
+            raise Exception("Table is full")
+        self.sits.append(player)
+
+    def display(self):
+        names =[]
+        for i in range(4):
+            if self.sits[i]:
+                names.append(self.sits[i].name)
+            names.append("X")
+        return (names)
+
+    def startRound(self):
+        r = Round(self.sits)
+        return r
+
+
 if __name__ == '__main__':
     deck = Deck()
     deck.shuffle()
@@ -377,5 +390,18 @@ if __name__ == '__main__':
     print(best)
     for i in bestCombination:
         print(i)
+
+    p1 = Player("A")
+    p2 = Player("B")
+
+    t = Table()
+    t.take_sit(p1)
+    t.take_sit(p2)
+
+    r = t.startRound()
+
+    r.showThree()
+
+
     print('Choose play :\n 1 - fold \n 2 - check  \n 3 - call \n 4 - raise \n 5 - all in')
     # print(hand)
